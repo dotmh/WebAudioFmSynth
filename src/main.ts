@@ -37,8 +37,8 @@ const getOsc = (freq: number) => {
         return [ADSRLabels[index], value]
       })) as unknown as AmpEnveloperADS;
 
-  const { start, stop, kill } = synth({ note: freq, osc1Type, osc2Type, filterEnvelope, gain, ampEnvelope });
-  return { start, stop, kill };
+  const { start, stop} = synth({ note: freq, osc1Type, osc2Type, filterEnvelope, gain, ampEnvelope });
+  return { start, stop};
 };
 
 
@@ -119,7 +119,7 @@ const getHz = (note = 'A', octave = 4) => {
 const pressedNotes = new Map();
 let clickedKey = '';
 
-const playKey = (key) => {
+const playKey = (key: string) => {
   if (!keys[key]) {
     return;
   }
