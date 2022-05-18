@@ -1,3 +1,4 @@
+// import {audioContext} from 'main.ts'
 const canvas = document.getElementById('canvas1');
 const keys = document.getElementById('keyboard');
 
@@ -11,16 +12,18 @@ keys.addEventListener('click', function(){
 
     // make sure the addEventListener is working
     console.log("keys pressed")
-
     const audioContext = new AudioContext();
-    audioSource = []
+    
+    // Need to assign a varible to audio source ideally output of the synth and that should feed the analyser.
+    // audioSource = 
+    
     analyser = audioContext.createAnalyser();
     audioSource.connect(analyser);
     analyser.connect(audioContext.destination);
     analyser.fftSize = 128;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
-
+    
     const barWidth = (canvas.width/2)/bufferLength;
     let barHeight;
     let x;
