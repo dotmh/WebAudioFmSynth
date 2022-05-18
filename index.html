@@ -11,6 +11,16 @@
     <h1>FM Synth</h1>
 
     <div class="nes-container with-title is-dark">
+      <p class="title">MIDI Device</p>
+
+      <div class="nes-select is-dark">
+        <select id="midiDevice">
+          <option value="none" id="midiPlaceholder">No device available</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="nes-container with-title is-dark">
       <p class="title">Synth</p>
       <label for="note">Note</label>
       <div id="app">
@@ -92,22 +102,22 @@
       <p class="title">Amplifier</p>
       <div class="nes-field">
         <label for="amp-attack">Attack</label>
-        <input type="range" id="amp-attack" min="0" max="2000">
+        <input type="range" id="amp-attack" min="0" max="2000" value="0" />
       </div>
 
       <div class="nes-field">
         <label for="amp-decay">Decay</label>
-        <input type="range" id="amp-decay" min="0" max="2000">
+        <input type="range" id="amp-decay" min="0" max="1000" />
       </div>
 
       <div class="nes-field">
         <label for="amp-sustain">Sustain</label>
-        <input type="range" id="amp-sustain" min="0" max="1000">
+        <input type="range" id="amp-sustain" min="0" max="1000" />
       </div>
 
       <div class="nes-field">
         <label for="amp-release">Release</label>
-        <input type="range" id="amp-release" min="0" max="2000">
+        <input type="range" id="amp-release" min="0" max="1000" />
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
