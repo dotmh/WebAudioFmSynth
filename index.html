@@ -13,33 +13,34 @@
     <div class="nes-container with-title is-dark">
       <p class="title">Synth</p>
       <label for="note">Note</label>
-      <div class="nes-select is-dark">
-        <select id="note">
-          <optgroup label="3">
-            <option value="130.81">C</option>
-            <option value="138.59">C#</option>
-            <option value="146.83">D</option>
-            <option value="155.56">D#</option>
-            <option value="164.81">E</option>
-            <option value="174.61">F</option>
-            <option value="185">F#</option>
-            <option value="196">G</option>
-            <option value="207.65">G#</option>
-            <option value="220">A</option>
-            <option value="233.08">A#</option>
-            <option value="246.94">B</option>
-          </optgroup>
-        </select>
+      <div id="app">
+        <ul id="keyboard">
+          <li note="C" class="white">A</li>
+          <li note="C#" class="black">W</li>
+          <li note="D" class="white offset">S</li>
+          <li note="D#" class="black">E</li>
+          <li note="E" class="white offset">D</li>
+          <li note="F" class="white">F</li>
+          <li note="F#" class="black">T</li>
+          <li note="G" class="white offset">G</li>
+          <li note="G#" class="black">Y</li>
+          <li note="A" class="white offset">H</li>
+          <li note="A#" class="black">U</li>
+          <li note="B" class="white offset">J</li>
+          <li note="C2" class="white">K</li>
+          <li note="C#2" class="black">O</li>
+          <li note="D2" class="white offset">L</li>
+          <li note="D#2" class="black">P</li>
+          <li note="E2" class="white offset">;</li>
+        </ul>
       </div>
-      <button id="play" type="button" class="nes-btn is-success">Play</button>
-      <button id="stop" type="button" class="nes-btn is-error">Stop</button>
     </div>
 
     <div class="nes-container with-title is-dark">
       <p class="title">Oscillator</p>
 
       <label for="wave1">Waveform 1</label>
-      <div class="nes-select  is-dark">
+      <div class="nes-select is-dark">
         <select id="wave1">
           <option value="sine">Sine</option>
           <option value="sawtooth">Saw</option>
@@ -60,31 +61,30 @@
 
       <div class="nes-field">
         <label for="osc-gain">Gain</label>
-        <input type="range" id="osc-gain" min="0" max="10000" value="5000">
+        <input type="range" id="osc-gain" min="0" max="10000" value="5000" />
       </div>
-
     </div>
 
     <div class="nes-container with-title is-dark">
       <p class="title">Filter</p>
       <div class="nes-field">
         <label for="filter-attack">Attack</label>
-        <input type="range" id="filter-attack" min="10" max="1000">
+        <input type="range" id="filter-attack" min="10" max="1000" />
       </div>
 
       <div class="nes-field">
         <label for="filter-decay">Decay</label>
-        <input type="range" id="filter-decay" min="10" max="1000">
+        <input type="range" id="filter-decay" min="10" max="1000" />
       </div>
 
       <div class="nes-field">
         <label for="filter-sustain">Sustain</label>
-        <input type="range" id="filter-sustain" min="10" max="1000">
+        <input type="range" id="filter-sustain" min="10" max="1000" />
       </div>
 
       <div class="nes-field">
         <label for="filter-release">Release</label>
-        <input type="range" id="filter-release" min="10" max="1000">
+        <input type="range" id="filter-release" min="10" max="1000" />
       </div>
     </div>
 
