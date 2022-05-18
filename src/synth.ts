@@ -20,6 +20,12 @@ interface FilterOptions {
  duration?: number
 }
 
+interface SynthConfig {
+    note: number,
+    osc1Type: OscillatorType,
+    osc2Type: OscillatorType
+}
+
 const sleep = async (time: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, time));
 
 const adsrFilter = (audioContext: AudioContext, filterOptions: FilterOptions): BiquadFilterNode => {
@@ -60,14 +66,17 @@ const fMOsc = (audioContext: AudioContext, oscOptions: OscOptions): FmOsc => {
 
 }
 
-export const synth = async () => {
+export const synth = (config: SynthConfig): {start: () => void, stop: () => void} => {
+
+  const {note, osc1Type, osc2Type} = config;
+
   const audioContext: AudioContext = new AudioContext();
 
   const {osc1 , osc2} = fMOsc(audioContext, {
-    osc1Type: 'sine',
-    osc2Type: 'sine',
-    osc1Freq: C,
-    osc2Freq: C,
+    osc1Type,
+    osc2Type,
+    osc1Freq: note,
+    osc2Freq: note,
     gain: 5000
   });
 
@@ -80,11 +89,14 @@ export const synth = async () => {
   osc2.connect(filter);
   filter.connect(audioContext.destination)
 
-  osc1.start(audioContext.currentTime);
-  osc2.start(audioContext.currentTime);
-
-  await sleep(2000);
-
-  osc1.stop();
-  osc2.stop();
+  return {
+      start: () => {
+          osc1.start(audioContext.currentTime);
+          osc2.start(audioContext.currentTime);
+      },
+      stop: () => {
+          osc1.stop();
+          osc2.stop();
+      }
+  }
 };

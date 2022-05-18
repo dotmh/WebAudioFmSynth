@@ -9,7 +9,56 @@
   </head>
   <body>
     <h1>FM Synth</h1>
-    <div id="app"></div>
+
+    <div class="nes-container with-title is-dark">
+      <p class="title">Synth</p>
+      <label for="note">Note</label>
+      <div class="nes-select is-dark">
+        <select id="note">
+          <optgroup label="3">
+            <option value="130.81">C</option>
+            <option value="138.59">C#</option>
+            <option value="146.83">D</option>
+            <option value="155.56">D#</option>
+            <option value="164.81">E</option>
+            <option value="174.61">F</option>
+            <option value="185">F#</option>
+            <option value="196">G</option>
+            <option value="207.65">G#</option>
+            <option value="220">A</option>
+            <option value="233.08">A#</option>
+            <option value="246.94">B</option>
+          </optgroup>
+        </select>
+      </div>
+      <button id="play" type="button" class="nes-btn is-success">Play</button>
+      <button id="stop" type="button" class="nes-btn is-error">Stop</button>
+    </div>
+
+    <div class="nes-container with-title is-dark">
+      <p class="title">Oscillator</p>
+
+      <label for="wave1">Waveform 1</label>
+      <div class="nes-select  is-dark">
+        <select id="wave1">
+          <option value="sine">Sine</option>
+          <option value="sawtooth">Saw</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+        </select>
+      </div>
+
+      <label for="wave2">Waveform 2</label>
+      <div class="nes-select is-dark">
+        <select id="wave2">
+          <option value="sine">Sine</option>
+          <option value="sawtooth">Saw</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+        </select>
+      </div>
+
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
