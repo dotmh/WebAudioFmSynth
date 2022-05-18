@@ -23,7 +23,8 @@ interface FilterOptions {
 interface SynthConfig {
     note: number,
     osc1Type: OscillatorType,
-    osc2Type: OscillatorType
+    osc2Type: OscillatorType,
+    filterEnvelope: Float32Array
 }
 
 const sleep = async (time: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, time));
@@ -68,7 +69,7 @@ const fMOsc = (audioContext: AudioContext, oscOptions: OscOptions): FmOsc => {
 
 export const synth = (config: SynthConfig): {start: () => void, stop: () => void} => {
 
-  const {note, osc1Type, osc2Type} = config;
+  const {note, osc1Type, osc2Type, filterEnvelope: envelope} = config;
 
   const audioContext: AudioContext = new AudioContext();
 
@@ -82,7 +83,7 @@ export const synth = (config: SynthConfig): {start: () => void, stop: () => void
 
   const filter = adsrFilter(audioContext, {
     type: 'lowpass',
-    envelope: new Float32Array([440, 220, 110, 55, 440]),
+    envelope,
     q: 4
   })
 
