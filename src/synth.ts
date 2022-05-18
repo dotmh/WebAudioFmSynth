@@ -100,9 +100,6 @@ const fMOsc = (audioContext: AudioContext, oscOptions: OscOptions): FmOsc => {
 export const synth = (config: SynthConfig): { start: () => GainNode; stop: () => void } => {
   const { note, osc1Type, osc2Type, filterEnvelope: envelope, gain, ampEnvelope, outputNode } = config;
 
-  console.log('Configuration : ');
-  console.dir(config);
-
   const audioContext: AudioContext = new AudioContext();
 
   const { osc1, osc2 } = fMOsc(audioContext, {

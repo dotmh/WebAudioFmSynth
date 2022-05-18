@@ -1,4 +1,4 @@
-import { listMidiDevices } from './midi';
+import { listMidiDevices, setSelectedMidiDevice } from './midi';
 import { AmpEnveloperADS, synth } from './synth';
 const ADSRLabels: ['attack', 'decay', 'sustain', 'release'] = [
   'attack',
@@ -138,27 +138,29 @@ const getHz = (note = 'A', octave = 4) => {
 const pressedNotes = new Map();
 let clickedKey = '';
 
-const playKey = (key: string) => {
-  if (!keys[key]) {
-    return;
+export const playKey = (key: string | number) => {
+  let freq;
+  if (typeof key === 'string') {
+    if (!keys[key]) {
+      return;
+    }
+
+    freq = getHz(keys[key].note, (keys[key].octaveOffset || 0) + 3);
+  } else {
+    const a = 440;
+    freq = (a / 32) * 2 ** ((key - 9) / 12);
   }
-
-  const freq = getHz(keys[key].note, (keys[key].octaveOffset || 0) + 3);
-
+  console.dir(freq);
   if (Number.isFinite(freq)) {
-    keys[key].element.classList.add('pressed');
+    keys?.[key]?.element?.classList?.add('pressed');
     const osc = getOsc(freq);
     pressedNotes.set(key, osc);
     pressedNotes.get(key).start();
   }
 };
 
-const stopKey = (key) => {
-  if (!keys[key]) {
-    return;
-  }
-
-  keys[key].element.classList.remove('pressed');
+export const stopKey = (key: string | number) => {
+  keys[key]?.element?.classList?.remove('pressed');
   const osc = pressedNotes.get(key);
 
   if (osc) {
@@ -198,3 +200,8 @@ document.addEventListener('mouseup', () => {
 });
 
 await listMidiDevices();
+const selectElement = document.querySelector('#midiDevice');
+
+selectElement?.addEventListener('change', (event) => {
+  setSelectedMidiDevice(event.target.value);
+});

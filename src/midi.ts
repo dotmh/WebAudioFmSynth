@@ -1,21 +1,44 @@
+import { playKey, stopKey } from './main';
+
+const midiInputs: any[] = [];
+
 export const listMidiDevices = async () => {
   const access = await navigator.requestMIDIAccess();
-  const inputs: string[] = [];
-  console.dir(access.inputs);
   access.inputs.forEach((input) => {
-    inputs.push(input.name);
+    midiInputs.push(input);
   });
-  console.dir(inputs);
-  if (inputs.length) {
+  if (midiInputs.length) {
     const midiSelectList = document.getElementById('midiDevice');
     const placeholderOption = document.getElementById('midiPlaceholder');
     placeholderOption?.remove();
-    inputs.forEach((input) => {
+    midiInputs.forEach((input) => {
       const option = document.createElement('option');
-      console.dir(midiSelectList.value);
-      option.value = input;
-      option.text = input;
+      option.value = input.name;
+      option.text = input.name;
       midiSelectList?.appendChild(option);
     });
+    setSelectedMidiDevice(midiSelectList.value);
   }
+};
+
+export const setSelectedMidiDevice = async (selectedInputName: string) => {
+  midiInputs.forEach((input) => {
+    if (input.name === selectedInputName) {
+      input.onmidimessage = (message) => {
+        const noteOnMidi = 144;
+        const noteOffMidi = 128;
+        if (message.data[0] === noteOnMidi && message.data[2] > 0) {
+          playKey(message.data[1]);
+        }
+        if (
+          message.data[0] === noteOffMidi ||
+          (message.data[0] === noteOnMidi && message.data[2] === 0)
+        ) {
+          stopKey(message.data[1]);
+        }
+      };
+    } else {
+      input.onmidimessage = '';
+    }
+  });
 };
