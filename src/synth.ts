@@ -25,10 +25,38 @@ interface SynthConfig {
     osc1Type: OscillatorType,
     osc2Type: OscillatorType,
     filterEnvelope: Float32Array,
-    gain: number
+    gain: number,
+    ampEnvelope: AmpEnveloperADS
+}
+
+export interface AmpEnveloperADS {
+    attack: number,
+    decay: number,
+    sustain: number,
+    release: number
+}
+
+interface AmpControl {
+    amp: GainNode,
+    releaseCb: () => void;
 }
 
 const sleep = async (time: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, time));
+
+const adsrAmp = (audioContext: AudioContext, {attack, decay, sustain, release}: AmpEnveloperADS): AmpControl => {
+    const amp: GainNode = audioContext.createGain();
+    amp.gain.setValueAtTime(0, audioContext.currentTime);
+    amp.gain.setValueAtTime(1, audioContext.currentTime + attack);
+    amp.gain.setValueAtTime(sustain, audioContext.currentTime + attack + decay);
+
+    const releaseCb = () => {
+        amp.gain.linearRampToValueAtTime(0, audioContext.currentTime + release);
+    }
+
+    return {
+        amp, releaseCb
+    }
+}
 
 const adsrFilter = (audioContext: AudioContext, filterOptions: FilterOptions): BiquadFilterNode => {
     
@@ -70,7 +98,10 @@ const fMOsc = (audioContext: AudioContext, oscOptions: OscOptions): FmOsc => {
 
 export const synth = (config: SynthConfig): {start: () => void, stop: () => void} => {
 
-  const {note, osc1Type, osc2Type, filterEnvelope: envelope, gain} = config;
+  const {note, osc1Type, osc2Type, filterEnvelope: envelope, gain, ampEnvelope} = config;
+
+  console.log('Configuration : ');
+  console.dir(config);
 
   const audioContext: AudioContext = new AudioContext();
 
@@ -83,13 +114,16 @@ export const synth = (config: SynthConfig): {start: () => void, stop: () => void
   });
 
   const filter = adsrFilter(audioContext, {
-    type: 'lowpass',
+    type: 'bandpass',
     envelope,
     q: 4
   })
 
+  const {amp, releaseCb} = adsrAmp(audioContext, ampEnvelope)
+
   osc2.connect(filter);
-  filter.connect(audioContext.destination)
+  filter.connect(amp);
+  amp.connect(audioContext.destination)
 
   return {
       start: () => {
@@ -97,8 +131,9 @@ export const synth = (config: SynthConfig): {start: () => void, stop: () => void
           osc2.start(audioContext.currentTime);
       },
       stop: () => {
-          osc1.stop();
-          osc2.stop();
+          releaseCb();
+        //   osc1.stop();
+        //   osc2.stop();
       }
   }
 };

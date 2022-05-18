@@ -1,4 +1,4 @@
-import { synth } from "./synth";
+import { AmpEnveloperADS, synth } from "./synth";
 
 let _stop: (() => void) | null;
 
@@ -6,6 +6,8 @@ const playBtn: HTMLButtonElement | null = document.querySelector('#play');
 const stopBtn: HTMLButtonElement | null = document.querySelector('#stop');
 
 const isDisabled: 'is-disabled' = 'is-disabled';
+
+const ADSRLabels: ['attack', 'decay', 'sustain', 'release'] = ['attack', 'decay', 'sustain', 'release']
 
 const play = () => {
 
@@ -21,6 +23,13 @@ const play = () => {
     document.querySelector('#filter-release')
   ]
 
+  const ampEls: (HTMLInputElement | null)[] = [
+    document.querySelector('#amp-attack'),
+    document.querySelector('#amp-decay'),
+    document.querySelector('#amp-sustain'),
+    document.querySelector('#amp-release'),
+  ]
+
   const note: number = noteEl ? parseFloat(noteEl.value) : 0;
   const osc1Type = osc1TypeEl ? osc1TypeEl.value as unknown as OscillatorType : 'sine';
   const osc2Type = osc2TypeEl ? osc2TypeEl.value as unknown as OscillatorType : 'sine';
@@ -29,7 +38,16 @@ const play = () => {
   const filterEnvelope = 
     new Float32Array(filterEls?.map((filterEl) => filterEl ? parseFloat(filterEl.value) : 0))
 
-  const {start, stop} = synth({note, osc1Type, osc2Type, filterEnvelope, gain});
+  const ampEnvelope = 
+  Object.fromEntries(
+    ampEls
+      .map((ampEl) => ampEl ? parseFloat(ampEl.value) : 0)
+      .map((value) => value / 1000)
+      .map((value, index) => {
+        return [ADSRLabels[index], value]
+      })) as unknown as AmpEnveloperADS;
+
+  const {start, stop} = synth({note, osc1Type, osc2Type, filterEnvelope, gain, ampEnvelope});
   _stop  = stop;
   start();
 
