@@ -1,5 +1,3 @@
-const C: number = 130.81;
-
 interface OscOptions {
   osc1Type: OscillatorType;
   osc2Type: OscillatorType;
@@ -41,9 +39,6 @@ interface AmpControl {
   amp: GainNode;
   releaseCb: () => number;
 }
-
-const sleep = async (time: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, time));
 
 const adsrAmp = (
   audioContext: AudioContext,
