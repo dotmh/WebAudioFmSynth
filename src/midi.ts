@@ -29,6 +29,7 @@ export const setSelectedMidiDevice = async (selectedInputName: string) => {
         const noteOffMidi = 128;
         if (message.data[0] === noteOnMidi && message.data[2] > 0) {
           playKey(message.data[1]);
+          console.dir(message.data[1]);
         }
         if (
           message.data[0] === noteOffMidi ||

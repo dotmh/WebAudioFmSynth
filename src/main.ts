@@ -43,18 +43,20 @@ const getOsc = (freq: number) => {
       })
   ) as unknown as AmpEnveloperADS;
 
-  const { start, stop} = synth({
+  const { start, stop } = synth({
     note: freq,
     osc1Type,
     osc2Type,
     filterEnvelope,
     gain,
-    ampEnvelope
+    ampEnvelope,
   });
-  return { start, stop};
+  return { start, stop };
 };
 
-const getElementByNote = (note: any) => note && document.querySelector(`[note="${note}"]`);
+const getElementByNote = (note: string) => note && document.querySelector(`[note="${note}"]`);
+const getElementByMidiValue = (note: number) =>
+  note && document.querySelector(`[midiValue="${note}"]`);
 
 const keys = {
   A: { element: getElementByNote('C'), note: 'C', octaveOffset: 0 },
@@ -145,6 +147,9 @@ export const playKey = (key: string | number) => {
   console.dir(freq);
   if (Number.isFinite(freq)) {
     keys?.[key]?.element?.classList?.add('pressed');
+    if (typeof key === 'number') {
+      getElementByMidiValue(key)?.classList?.add('pressed');
+    }
     const osc = getOsc(freq);
     pressedNotes.set(key, osc);
     pressedNotes.get(key).start();
@@ -153,6 +158,9 @@ export const playKey = (key: string | number) => {
 
 export const stopKey = (key: string | number) => {
   keys[key]?.element?.classList?.remove('pressed');
+  if (typeof key === 'number') {
+    getElementByMidiValue(key)?.classList?.remove('pressed');
+  }
   const osc = pressedNotes.get(key);
 
   if (osc) {
