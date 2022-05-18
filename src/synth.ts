@@ -38,7 +38,7 @@ export interface AmpEnveloperADS {
 
 interface AmpControl {
     amp: GainNode,
-    releaseCb: () => void;
+    releaseCb: () => number;
 }
 
 const sleep = async (time: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, time));
@@ -50,7 +50,13 @@ const adsrAmp = (audioContext: AudioContext, {attack, decay, sustain, release}: 
     amp.gain.setValueAtTime(sustain, audioContext.currentTime + attack + decay);
 
     const releaseCb = () => {
-        amp.gain.linearRampToValueAtTime(0, audioContext.currentTime + release);
+
+        console.log(audioContext.currentTime);
+        console.log(release);
+
+        const endAt = audioContext.currentTime + release
+        amp.gain.linearRampToValueAtTime(0, endAt);
+        return endAt;
     }
 
     return {
@@ -131,9 +137,12 @@ export const synth = (config: SynthConfig): {start: () => void, stop: () => void
           osc2.start(audioContext.currentTime);
       },
       stop: () => {
-          releaseCb();
-        //   osc1.stop();
-        //   osc2.stop();
+          const endAt = releaseCb();
+
+          console.log(endAt);
+
+          osc1.stop(endAt);
+          osc2.stop(endAt);
       }
   }
 };

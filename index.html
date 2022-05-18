@@ -34,6 +34,8 @@
           <li note="E2" class="white offset">;</li>
         </ul>
       </div>
+
+      <button class="nes-btn is-error" id="kill">Stop!</button>
     </div>
 
     <div class="nes-container with-title is-dark">
@@ -92,22 +94,22 @@
       <p class="title">Amplifier</p>
       <div class="nes-field">
         <label for="amp-attack">Attack</label>
-        <input type="range" id="amp-attack" min="10" max="1000">
+        <input type="range" id="amp-attack" min="0" max="2000">
       </div>
 
       <div class="nes-field">
         <label for="amp-decay">Decay</label>
-        <input type="range" id="amp-decay" min="10" max="1000">
+        <input type="range" id="amp-decay" min="0" max="2000">
       </div>
 
       <div class="nes-field">
         <label for="amp-sustain">Sustain</label>
-        <input type="range" id="amp-sustain" min="10" max="1000">
+        <input type="range" id="amp-sustain" min="0" max="1000">
       </div>
 
       <div class="nes-field">
         <label for="amp-release">Release</label>
-        <input type="range" id="amp-release" min="10" max="1000">
+        <input type="range" id="amp-release" min="0" max="2000">
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

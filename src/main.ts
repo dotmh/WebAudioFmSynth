@@ -37,9 +37,11 @@ const getOsc = (freq: number) => {
         return [ADSRLabels[index], value]
       })) as unknown as AmpEnveloperADS;
 
-  const { start, stop } = synth({ note: freq, osc1Type, osc2Type, filterEnvelope, gain, ampEnvelope });
-  return { start, stop };
+  const { start, stop, kill } = synth({ note: freq, osc1Type, osc2Type, filterEnvelope, gain, ampEnvelope });
+  return { start, stop, kill };
 };
+
+
 
 const getElementByNote = (note: any) => note && document.querySelector(`[note="${note}"]`);
 
