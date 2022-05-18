@@ -1,8 +1,8 @@
 // import {audioContext} from 'main.ts'
-const canvas = document.getElementById('canvas1');
+const canvas = document.getElementById('canvas1') as HTMLCanvasElement;
 canvas.width = 50;
 canvas.height = 50;
-const ctx = canvas.getContext('2d');
+const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
 let analyser;
 
 export const visualiser = (audioContext) => {
@@ -21,6 +21,9 @@ export const visualiser = (audioContext) => {
 
     // animate for bar graph frequency display
     function animate(){
+        if (!ctx) {
+            return;
+        }
         x = 0;
         ctx.clearRect(0,0, canvas.width, canvas.height);
         analyser.getByteFrequencyData(dataArray);
@@ -33,6 +36,9 @@ export const visualiser = (audioContext) => {
 
 // Below drawVisualiser is a ciicle Visualiser
 function drawVisualiser(bufferLength, x, barWidth, barHeight, dataArray){
+    if (!ctx) {
+        return;
+    }
     for(let i = 0; i < bufferLength; i++){
         barHeight = dataArray[i];
         ctx.save();
