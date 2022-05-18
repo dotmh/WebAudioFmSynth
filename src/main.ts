@@ -49,15 +49,7 @@ const getOsc = (freq: number) => {
     osc2Type,
     filterEnvelope,
     gain,
-    ampEnvelope,
-    outputNode: (audioContext) => {
-    /* Replace this code with any nodes you want to run at the end of the audio graph
-     * Example 
-     * =======
-     */
-      const delay = audioContext.createDelay(5.0);
-      return delay;
-    }
+    ampEnvelope
   });
   return { start, stop};
 };
