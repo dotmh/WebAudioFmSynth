@@ -191,9 +191,11 @@ document.addEventListener('mouseup', () => {
   stopKey(clickedKey);
 });
 
+(async() => {
 await listMidiDevices();
 const selectElement = document.querySelector('#midiDevice');
 
 selectElement?.addEventListener('change', (event) => {
-  setSelectedMidiDevice(event.target.value);
+  setSelectedMidiDevice((event.target as HTMLSelectElement).value);
 });
+})();

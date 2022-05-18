@@ -3,7 +3,7 @@ import { playKey, stopKey } from './main';
 const midiInputs: any[] = [];
 
 export const listMidiDevices = async () => {
-  const access = await navigator.requestMIDIAccess();
+  const access = await (navigator as any).requestMIDIAccess();
   access.inputs.forEach((input) => {
     midiInputs.push(input);
   });
@@ -17,7 +17,7 @@ export const listMidiDevices = async () => {
       option.text = input.name;
       midiSelectList?.appendChild(option);
     });
-    setSelectedMidiDevice(midiSelectList.value);
+    setSelectedMidiDevice((midiSelectList as HTMLSelectElement).value);
   }
 };
 
