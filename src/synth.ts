@@ -50,10 +50,6 @@ const adsrAmp = (audioContext: AudioContext, {attack, decay, sustain, release}: 
     amp.gain.setValueAtTime(sustain, audioContext.currentTime + attack + decay);
 
     const releaseCb = () => {
-
-        console.log(audioContext.currentTime);
-        console.log(release);
-
         const endAt = audioContext.currentTime + release
         amp.gain.linearRampToValueAtTime(0, endAt);
         return endAt;
@@ -138,9 +134,6 @@ export const synth = (config: SynthConfig): {start: () => void, stop: () => void
       },
       stop: () => {
           const endAt = releaseCb();
-
-          console.log(endAt);
-
           osc1.stop(endAt);
           osc2.stop(endAt);
       }
