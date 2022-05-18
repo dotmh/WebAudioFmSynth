@@ -12,6 +12,8 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
+    "nes.css": "^2.3.0",
+    "sass": "^1.51.0",
     "vitest": "^0.12.6"
   }
 }

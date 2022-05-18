@@ -14,13 +14,25 @@ interface FmOsc {
 }
 
 interface FilterOptions {
-
+ type: BiquadFilterType;
+ q: number,
+ envelope: Float32Array
+ duration?: number
 }
 
 const sleep = async (time: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, time));
 
-const filter = (audioContext: AudioContext, filterOptions: FilterOptions) => {
+const adsrFilter = (audioContext: AudioContext, filterOptions: FilterOptions): BiquadFilterNode => {
+    
+  const {type, q, envelope, duration} = filterOptions;
   
+  const filter: BiquadFilterNode = audioContext.createBiquadFilter();
+    
+  filter.type = type;
+  filter.frequency.setValueCurveAtTime(envelope, audioContext.currentTime, duration ?? 4);
+  filter.Q.value = q;
+
+  return filter;
 }
 
 const fMOsc = (audioContext: AudioContext, oscOptions: OscOptions): FmOsc => {
@@ -59,7 +71,14 @@ export const synth = async () => {
     gain: 5000
   });
 
-  osc2.connect(audioContext.destination);
+  const filter = adsrFilter(audioContext, {
+    type: 'lowpass',
+    envelope: new Float32Array([440, 220, 110, 55, 440]),
+    q: 4
+  })
+
+  osc2.connect(filter);
+  filter.connect(audioContext.destination)
 
   osc1.start(audioContext.currentTime);
   osc2.start(audioContext.currentTime);
