@@ -2,11 +2,17 @@ import { synth } from "./synth";
 
 let _stop: (() => void) | null;
 
+const playBtn: HTMLButtonElement | null = document.querySelector('#play');
+const stopBtn: HTMLButtonElement | null = document.querySelector('#stop');
+
+const isDisabled: 'is-disabled' = 'is-disabled';
+
 const play = () => {
 
   const noteEl: HTMLSelectElement | null = document.querySelector('#note');
   const osc1TypeEl: HTMLSelectElement | null = document.querySelector('#wave1');
   const osc2TypeEl: HTMLSelectElement | null = document.querySelector('#wave2');
+  const oscGainEl: HTMLInputElement | null = document.querySelector('#osc-gain')
 
   const filterEls: (HTMLInputElement | null)[] = [
     document.querySelector('#filter-attack'),
@@ -18,21 +24,36 @@ const play = () => {
   const note: number = noteEl ? parseFloat(noteEl.value) : 0;
   const osc1Type = osc1TypeEl ? osc1TypeEl.value as unknown as OscillatorType : 'sine';
   const osc2Type = osc2TypeEl ? osc2TypeEl.value as unknown as OscillatorType : 'sine';
+  const gain: number = oscGainEl ? parseFloat(oscGainEl.value) : 5000;
 
   const filterEnvelope = 
     new Float32Array(filterEls?.map((filterEl) => filterEl ? parseFloat(filterEl.value) : 0))
 
-  const {start, stop} = synth({note, osc1Type, osc2Type, filterEnvelope});
+  const {start, stop} = synth({note, osc1Type, osc2Type, filterEnvelope, gain});
   _stop  = stop;
   start();
+
+  if (playBtn) {
+    playBtn.disabled = true;
+    playBtn.classList.add(isDisabled);
+  }
 }
 
 const stop = () => {
   if (_stop) {
     _stop();
     _stop = null;
+    if (playBtn) {
+      playBtn.disabled = false;
+      playBtn.classList.remove(isDisabled)
+    }
   }
 }
 
-document.querySelector('#play')?.addEventListener('click', play);
-document.querySelector('#stop')?.addEventListener('click', stop);
+if (playBtn) {
+  playBtn.addEventListener('click', play)
+}
+
+if (stopBtn) {
+  stopBtn.addEventListener('click', stop);
+}
