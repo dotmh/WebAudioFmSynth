@@ -1,5 +1,11 @@
-import { AmpEnveloperADS, synth } from "./synth";
-const ADSRLabels: ['attack', 'decay', 'sustain', 'release'] = ['attack', 'decay', 'sustain', 'release']
+import { listMidiDevices } from './midi';
+import { AmpEnveloperADS, synth } from './synth';
+const ADSRLabels: ['attack', 'decay', 'sustain', 'release'] = [
+  'attack',
+  'decay',
+  'sustain',
+  'release',
+];
 
 const getOsc = (freq: number) => {
   const osc1TypeEl: HTMLSelectElement | null = document.querySelector('#wave1');
@@ -18,30 +24,35 @@ const getOsc = (freq: number) => {
     document.querySelector('#amp-decay'),
     document.querySelector('#amp-sustain'),
     document.querySelector('#amp-release'),
-  ]
+  ];
 
-  const osc1Type = osc1TypeEl ? osc1TypeEl.value as unknown as OscillatorType : 'sine';
-  const osc2Type = osc2TypeEl ? osc2TypeEl.value as unknown as OscillatorType : 'sine';
+  const osc1Type = osc1TypeEl ? (osc1TypeEl.value as unknown as OscillatorType) : 'sine';
+  const osc2Type = osc2TypeEl ? (osc2TypeEl.value as unknown as OscillatorType) : 'sine';
   const gain: number = oscGainEl ? parseFloat(oscGainEl.value) : 5000;
 
   const filterEnvelope = new Float32Array(
     filterEls?.map((filterEl) => (filterEl ? parseFloat(filterEl.value) : 0))
   );
 
-  const ampEnvelope = 
-  Object.fromEntries(
+  const ampEnvelope = Object.fromEntries(
     ampEls
-      .map((ampEl) => ampEl ? parseFloat(ampEl.value) : 0)
+      .map((ampEl) => (ampEl ? parseFloat(ampEl.value) : 0))
       .map((value) => value / 1000)
       .map((value, index) => {
-        return [ADSRLabels[index], value]
-      })) as unknown as AmpEnveloperADS;
+        return [ADSRLabels[index], value];
+      })
+  ) as unknown as AmpEnveloperADS;
 
-  const { start, stop} = synth({ note: freq, osc1Type, osc2Type, filterEnvelope, gain, ampEnvelope });
-  return { start, stop};
+  const { start, stop, kill } = synth({
+    note: freq,
+    osc1Type,
+    osc2Type,
+    filterEnvelope,
+    gain,
+    ampEnvelope,
+  });
+  return { start, stop, kill };
 };
-
-
 
 const getElementByNote = (note: any) => note && document.querySelector(`[note="${note}"]`);
 
@@ -177,3 +188,5 @@ for (const [key, { element }] of Object.entries(keys)) {
 document.addEventListener('mouseup', () => {
   stopKey(clickedKey);
 });
+
+await listMidiDevices();
