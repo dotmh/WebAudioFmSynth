@@ -27,6 +27,7 @@ interface SynthConfig {
   filterEnvelope: Float32Array;
   gain: number;
   ampEnvelope: AmpEnveloperADS;
+  outputNode?: (audioContext: AudioContext) => AudioNode;
 }
 
 export interface AmpEnveloperADS {
@@ -94,14 +95,15 @@ const fMOsc = (audioContext: AudioContext, oscOptions: OscOptions): FmOsc => {
   osc2.frequency.value = osc2Freq;
 
   // --> Wire up nodes
-  osc1.connect(gainNode);
+  osc1.connect(gainNode)
+
   gainNode.connect(osc2.detune);
 
   return { osc1, osc2 };
 };
 
-export const synth = (config: SynthConfig): { start: () => void; stop: () => void } => {
-  const { note, osc1Type, osc2Type, filterEnvelope: envelope, gain, ampEnvelope } = config;
+export const synth = (config: SynthConfig): { start: () => GainNode; stop: () => void } => {
+  const { note, osc1Type, osc2Type, filterEnvelope: envelope, gain, ampEnvelope, outputNode } = config;
 
   console.log('Configuration : ');
   console.dir(config);
@@ -126,12 +128,20 @@ export const synth = (config: SynthConfig): { start: () => void; stop: () => voi
 
   osc2.connect(filter);
   filter.connect(amp);
-  amp.connect(audioContext.destination);
+
+  if (outputNode) {
+    const outputNodeNode = outputNode(audioContext);
+    amp.connect(outputNodeNode);
+    outputNodeNode.connect(audioContext.destination);
+  } else {
+    amp.connect(audioContext.destination);
+  }
 
   return {
     start: () => {
       osc1.start(audioContext.currentTime);
       osc2.start(audioContext.currentTime);
+      return amp;
     },
     stop: () => {
       const endAt = releaseCb();

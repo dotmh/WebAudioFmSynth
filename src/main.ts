@@ -43,15 +43,23 @@ const getOsc = (freq: number) => {
       })
   ) as unknown as AmpEnveloperADS;
 
-  const { start, stop, kill } = synth({
+  const { start, stop} = synth({
     note: freq,
     osc1Type,
     osc2Type,
     filterEnvelope,
     gain,
     ampEnvelope,
+    outputNode: (audioContext) => {
+    /* Replace this code with any nodes you want to run at the end of the audio graph
+     * Example 
+     * =======
+     */
+      const delay = audioContext.createDelay(5.0);
+      return delay;
+    }
   });
-  return { start, stop, kill };
+  return { start, stop};
 };
 
 const getElementByNote = (note: any) => note && document.querySelector(`[note="${note}"]`);
