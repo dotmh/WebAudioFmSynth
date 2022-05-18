@@ -17,17 +17,15 @@ export const visualiser = (audioContext) => {
     
     const barWidth = (canvas.width/2)/bufferLength;
     let barHeight;
-    let x;
 
     // animate for bar graph frequency display
     function animate(){
         if (!ctx) {
             return;
         }
-        x = 0;
         ctx.clearRect(0,0, canvas.width, canvas.height);
         analyser.getByteFrequencyData(dataArray);
-        drawVisualiser(bufferLength, x, barWidth, barHeight, dataArray)
+        drawVisualiser(bufferLength, barWidth, barHeight, dataArray)
         requestAnimationFrame(animate);
     }
     animate();
@@ -35,7 +33,7 @@ export const visualiser = (audioContext) => {
 };
 
 // Below drawVisualiser is a ciicle Visualiser
-function drawVisualiser(bufferLength, x, barWidth, barHeight, dataArray){
+function drawVisualiser(bufferLength, barWidth, barHeight, dataArray){
     if (!ctx) {
         return;
     }
@@ -51,7 +49,6 @@ function drawVisualiser(bufferLength, x, barWidth, barHeight, dataArray){
         ctx.fillRect(0, 0, barWidth, 15);
         ctx.fillStyle = 'rgb('+ red + ',' + green + ',' + blue + ')';
         ctx.fillRect(0, 0, barWidth, barHeight);
-        x += barWidth;
         ctx.restore();
     }
 }

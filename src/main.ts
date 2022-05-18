@@ -156,7 +156,7 @@ export const playKey = (key: string | number) => {
   if (Number.isFinite(freq)) {
     keys?.[key]?.element?.classList?.add('pressed');
     if (typeof key === 'number') {
-      getElementByMidiValue(key)?.classList?.add('pressed');
+      (getElementByMidiValue(key) as any)?.classList?.add('pressed');
     }
     const osc = getOsc(freq);
     pressedNotes.set(key, osc);
@@ -167,7 +167,7 @@ export const playKey = (key: string | number) => {
 export const stopKey = (key: string | number) => {
   keys[key]?.element?.classList?.remove('pressed');
   if (typeof key === 'number') {
-    getElementByMidiValue(key)?.classList?.remove('pressed');
+    (getElementByMidiValue(key) as any)?.classList?.remove('pressed');
   }
   const osc = pressedNotes.get(key);
 
@@ -197,7 +197,7 @@ document.addEventListener('keyup', (e) => {
 });
 
 for (const [key, { element }] of Object.entries(keys)) {
-  element.addEventListener('mousedown', () => {
+  (element as any).addEventListener('mousedown', () => {
     playKey(key);
     clickedKey = key;
   });
