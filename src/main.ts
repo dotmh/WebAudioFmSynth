@@ -1,5 +1,6 @@
 import { listMidiDevices, setSelectedMidiDevice } from './midi';
 import { AmpEnveloperADS, synth } from './synth';
+import { visualiser } from "./visualiser";
 const ADSRLabels: ['attack', 'decay', 'sustain', 'release'] = [
   'attack',
   'decay',
@@ -50,6 +51,13 @@ const getOsc = (freq: number) => {
     filterEnvelope,
     gain,
     ampEnvelope,
+    outputNode: (audioContext) => {
+    /* Replace this code with any nodes you want to run at the end of the audio graph
+     * Example 
+     * =======
+     */
+     return visualiser(audioContext);
+    }
   });
   return { start, stop };
 };

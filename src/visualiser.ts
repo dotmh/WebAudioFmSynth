@@ -1,25 +1,16 @@
 // import {audioContext} from 'main.ts'
 const canvas = document.getElementById('canvas1');
-const keys = document.getElementById('keyboard');
-
 canvas.width = 50;
 canvas.height = 50;
 const ctx = canvas.getContext('2d');
-let audioSource;
 let analyser;
 
-keys.addEventListener('click', function(){
-
-    // make sure the addEventListener is working
-    console.log("keys pressed")
-    const audioContext = new AudioContext();
+export const visualiser = (audioContext) => {
     
     // Need to assign a varible to audio source ideally output of the synth and that should feed the analyser.
     // audioSource = 
     
     analyser = audioContext.createAnalyser();
-    audioSource.connect(analyser);
-    analyser.connect(audioContext.destination);
     analyser.fftSize = 128;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
@@ -36,9 +27,9 @@ keys.addEventListener('click', function(){
         drawVisualiser(bufferLength, x, barWidth, barHeight, dataArray)
         requestAnimationFrame(animate);
     }
-    return animate();
-
-});
+    animate();
+    return analyser;
+};
 
 // Below drawVisualiser is a ciicle Visualiser
 function drawVisualiser(bufferLength, x, barWidth, barHeight, dataArray){
